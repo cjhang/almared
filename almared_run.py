@@ -36,3 +36,13 @@ def run_make_all_cont_images(visdir=None, outdir=None):
             concatvis = os.path.join(visdir, vis_combined)
             concat(vis=vis_list, concatvis=concatvis)
             make_cont_image(concatvis, outdir=outdir)
+
+
+def run_make_all_cubes(visdir=None, outdir=None):
+    """generate images for all the visibilies in one directory
+    """
+    if not os.path.isdir(outdir):
+        os.system('mkdir {}'.format(outdir))
+    for vis in os.listdir(visdir):
+        make_cube(os.path.join(visdir,vis), outdir=outdir)
+
