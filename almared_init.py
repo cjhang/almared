@@ -10,5 +10,4 @@ ROOT_DIR_CODE = os.path.join(ROOT_DIR, 'code')
 print("Project path: {}".format(ROOT_DIR))
 sys.path.append(ROOT_DIR)
 
-execfile(os.path.join(ROOT_DIR_CODE, 'almared_utils.py'))
 execfile(os.path.join(ROOT_DIR_CODE, 'almared_run.py'))
