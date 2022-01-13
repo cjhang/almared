@@ -11,3 +11,4 @@ print("Project path: {}".format(ROOT_DIR))
 sys.path.append(ROOT_DIR)
 
 execfile(os.path.join(ROOT_DIR_CODE, 'almared_run.py'))
+execfile(os.path.join(os.path.expanduser('~'), 'work/projects/code_snippets/casa/casa_utils.py'))

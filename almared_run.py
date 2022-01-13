@@ -38,33 +38,6 @@ def split_sources(msfile, match='HATLAS_RED_\d+', datacolumn='corrected',
             split(vis=msfile, outputvis=ms_field, datacolumn=datacolumn,
                     field=name, spw=spw, **kwargs)
 
-def read_spw(vis):
-    """read the spectral windows
-    """
-    tb = tbtool()
-    if isinstance(vis, str):
-        vis = [vis, ]
-    
-    if not isinstance(vis, list):
-        raise ValueError("read_spw: Unsupported measurements files!")
-    
-    spw_specrange = {}
-
-    for v in vis:
-        tb.open(v + '/SPECTRAL_WINDOW')
-        col_names = tb.getvarcol('NAME')
-        col_freq = tb.getvarcol('CHAN_FREQ')
-        tb.close()
-
-        for key in col_names.keys():
-            freq_max = np.max(col_freq[key]) / 1e9
-            freq_min = np.min(col_freq[key]) / 1e9
-            freq_interv = np.abs(np.mean(np.diff(col_freq[key], axis=0))) / 1e9
-            freq_nchan = len(col_freq[key])
-            spw_specrange[key] = [freq_min, freq_max, freq_interv, freq_nchan]
-
-    return list(spw_specrange.values())
-
 def make_cont_image(vis, basename=None, outdir='./',
         datacolumn='data', imsize=200, cellsize='0.2arcsec', 
         outframe='LSRK', specmode='mfs', 
@@ -256,4 +229,12 @@ def run_make_all_cubes(visdir=None, outdir=None):
     for vis in os.listdir(visdir):
         make_cube(os.path.join(visdir,vis), outdir=outdir)
 
+def run_make_jackknif_vis(visdir=None, outdir=None, image_outdir=None):
+    """generating jackknif images for all the visibilies
+    """
+    if not os.path.isdir(outdir):
+        os.system('mkdir {}'.format(outdir))
+    for vis in os.listdir(visdir):
+        vis_copy = vis_jackknif(os.path.join(visdir,vis), copy=True, outdir=outdir)
+        make_cont_image(vis_copy, outdir=image_outdir, basename=os.path.basename(vis_copy)[:-8]+'.jackknif')
 
